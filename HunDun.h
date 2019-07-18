@@ -13,11 +13,10 @@
 #define M 50
 /////////////////////////////////////////////////////////////////////////////
 
-class CHunDun
-{
+class CHunDun {
 // Construction
 public:
-	CHunDun(double x=0,double y=0,double x_goal=0,double y_goal=0);
+	CHunDun(double x = 0, double y = 0, double x_goal = 0, double y_goal = 0);
 
 // Attributes
 public:
@@ -25,34 +24,37 @@ public:
 // Operations
 public:
 	UINT MapRand(UINT nMax);
-
-	double yg;		// Ä¿±êµãÎ»ÖÃ
+	
+	double yg;        // Ä¿ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 	double xg;
-
-	int iz;	// ÕÏ°­Îï¸öÊý
-
-	double XYT1[2];	// ÏÂÒ»ÖÜÆÚ»úÆ÷ÈË×ø±ê
-	double XYTO[2];	// µ±Ç°»úÆ÷ÈË×ø±ê
-
-	double XYOX[20];	// ÕÏ°­ÎïX×ø±ê
-	double XYOY[20];	// ÕÏ°­ÎïY×ø±ê
-
-	double X[N];		// ÀíÏë²½³¤[0]ºÍ½Ç¶È[1]
-
-	double OPTX[N];		// ÁÙÊ±±äÁ¿
-	double COEA[N];		// ÁÙÊ±±äÁ¿
-	double XX[N][M];	// ÁÙÊ±±äÁ¿
-	double F[M];		// ÁÙÊ±±äÁ¿
-	double B[N];		// ÁÙÊ±±äÁ¿
-	double A[N];		// ÁÙÊ±±äÁ¿
-	double MINU;		// ÁÙÊ±±äÁ¿
-
+	
+	int iz;    // ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	
+	double XYT1[2];    // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	double XYTO[2];    // ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	
+	double XYOX[20];    // ï¿½Ï°ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
+	double XYOY[20];    // ï¿½Ï°ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½
+	
+	double X[N];        // ï¿½ï¿½ï¿½ë²½ï¿½ï¿½[0]ï¿½Í½Ç¶ï¿½[1]
+	
+	double OPTX[N];        // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	double COEA[N];        // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	double XX[N][M];    // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	double F[M];        // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	double B[N];        // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	double A[N];        // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	double MINU;        // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	
 	void CARRIERWAVE();
+	
 	double fj();
+	
 	void CHAOS();
 
 public:
 	void hundun(VecPosition pos[], int nObstacles);
+	
 	virtual ~CHunDun();
 };
 

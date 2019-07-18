@@ -53,37 +53,37 @@ timer of the Logger has been restarted.
 #include "defines.h"
 
 #define MAX_CYCLES 18000
-#define DEFAULT_SPEED 100		// ms
-#define SHOW_MODE		1
-#define MSG_MODE		2
+#define DEFAULT_SPEED 100        // ms
+#define SHOW_MODE        1
+#define MSG_MODE        2
 
 typedef struct {
-	double	x ;
-	double	y ;
-	double	angle ;
-} pos_t ;
+	double x;
+	double y;
+	double angle;
+} pos_t;
 
 typedef struct {
-	int		time ;
-	pos_t	pos[ROBOTNUMBER*2+1] ;
-} showinfo_t ;
-
-typedef	struct {
-	int		time ;
-	int		nTab;
-	char	message[128] ;
-} msginfo_t ;
+	int time;
+	pos_t pos[ROBOTNUMBER * 2 + 1];
+} showinfo_t;
 
 typedef struct {
-	short	mode ;
+	int time;
+	int nTab;
+	char message[128];
+} msginfo_t;
+
+typedef struct {
+	short mode;
 	union {
-		showinfo_t	show ;
-		msginfo_t	msg ;
-	} body ;
-} dispinfo_t ;
+		showinfo_t show;
+		msginfo_t msg;
+	} body;
+} dispinfo_t;
 
 
-#include <stdio.h>			// needed for file
+#include <stdio.h>            // needed for file
 
 //#define OFFCLIENT
 
@@ -114,45 +114,58 @@ reference to it using the line 'extern Logger Log;' and can then use
 this Logger with the Log.Log( ... ) methods. Furthermore the Logger also
 contains a timer with Makes it possible to print the time since the timer
 has been restarted. */
-class Logger
-{
-	char    m_strBuf[5*MAX_LOG_LINE];    /*!< buffer needed by different methods    */
-	bool	m_bLogLevels[MAX_LOG_LEVEL];  /*!< Set that contains all log levels      */
-	char    m_strHeader[MAX_LOG_LEVEL][MAX_HEADER];/*!< header string printed before msg      */
-	FILE*	m_fp;                   /*!< output stream to print messages to    */
-	char	m_strLogFileName[32];   /*!< log file name */
-	int		m_nLogBufferLen;				 /*!< log buffer len */
+class Logger {
+	char m_strBuf[5 * MAX_LOG_LINE];    /*!< buffer needed by different methods    */
+	bool m_bLogLevels[MAX_LOG_LEVEL];  /*!< Set that contains all log levels      */
+	char m_strHeader[MAX_LOG_LEVEL][MAX_HEADER];/*!< header string printed before msg      */
+	FILE *m_fp;                   /*!< output stream to print messages to    */
+	char m_strLogFileName[32];   /*!< log file name */
+	int m_nLogBufferLen;                 /*!< log buffer len */
 
 #ifndef OFFCLIENT
-	COPYDATASTRUCT	cpData;
-	HWND		hWnd;
+	COPYDATASTRUCT cpData;
+	HWND hWnd;
 #else
 	CSimuroSotMonitorDoc*	m_pDoc;
 #endif
 
 public:
-	Logger( char* strFileName);
+	Logger(char *strFileName);
+	
 	Logger();
+	
 	~Logger();
-
+	
 	// different methods associated with logging messages
-	bool	AssociateFile	( char*	   strFileName                      );
-	bool    Log            ( int      iLevel, char   *str, ...        );
-	bool	LogAction			( int	   iLevel, char	  *str				);
-	bool    IsInLogLevel     ( int      iLevel                          );
-	bool    SetLogLevel      ( int      iLevel, bool bSet = true        );
-	bool    SetLogRange      ( int      iMin,   int iMax, bool bSet = true );
-	char*   GetHeader        ( int			 iLevel                          );
-	bool    SetHeader        ( int	iLevel, char     *str, bool bSet = true  );
-	FILE*	GetLogFile		(                                          );
-	void	SetLevelAndHeader();
+	bool AssociateFile(char *strFileName);
+	
+	bool Log(int iLevel, char *str, ...);
+	
+	bool LogAction(int iLevel, char *str);
+	
+	bool IsInLogLevel(int iLevel);
+	
+	bool SetLogLevel(int iLevel, bool bSet = true);
+	
+	bool SetLogRange(int iMin, int iMax, bool bSet = true);
+	
+	char *GetHeader(int iLevel);
+	
+	bool SetHeader(int iLevel, char *str, bool bSet = true);
+	
+	FILE *GetLogFile();
+	
+	void SetLevelAndHeader();
 
 /*******************************************************************/
 	BOOL SendMessageOfGame(dispinfo_t *pInfo);
+	
 	BOOL GetDebugWindowHandle();
+	
 	void SendMsg(int timer, int nTab, char *msg);
+	
 	void Show(char *str, ...);
-
+	
 };
 
 

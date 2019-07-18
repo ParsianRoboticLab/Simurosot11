@@ -50,11 +50,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "stdafx.h"
 #include "Logger.h"
 
-#include <string.h>		// needed for string operation, such as strcpy
+#include <string.h>        // needed for string operation, such as strcpy
+
 #ifdef Solaris
-  #include <varargs.h> // needed for va_list and va_start under Solaris
+#include <varargs.h> // needed for va_list and va_start under Solaris
 #else
-  #include <stdarg.h>
+
+#include <stdarg.h>
+
 #endif
 
 #ifdef OFFCLIENT
@@ -70,8 +73,7 @@ extern CSimuroSotMonitorApp theApp;
    \param FileName file name to which information is printed
    \param iMin minimal log level (default 0)
    \param iMax maximal log level (default 0) */
-Logger::Logger(  char* strFileName)
-{
+Logger::Logger(char *strFileName) {
 /*	SetLogRange(0, MAX_LOG_LEVEL, false);
 	for (int i=0; i<MAX_LOG_LEVEL; i++)
 	{
@@ -85,17 +87,15 @@ Logger::Logger(  char* strFileName)
 	SetLevelAndHeader();*/
 }
 
-Logger::Logger()
-{
+Logger::Logger() {
 	SetLogRange(0, MAX_LOG_LEVEL, false);
-	for (int i=0; i<MAX_LOG_LEVEL; i++)
-	{
+	for (int i = 0; i < MAX_LOG_LEVEL; i++) {
 		strcpy(m_strHeader[i], "");
 	}
 	m_nLogBufferLen = 0;
-
+	
 	m_fp = NULL;
-
+	
 	SetLevelAndHeader();
 
 #ifndef OFFCLIENT
@@ -109,12 +109,9 @@ Logger::Logger()
 
 }
 
-Logger::~Logger()
-{
-	if (m_fp != NULL)
-	{
-		if (m_nLogBufferLen > 0)
-		{
+Logger::~Logger() {
+	if (m_fp != NULL) {
+		if (m_nLogBufferLen > 0) {
 			fwrite(m_strBuf, m_nLogBufferLen, 1, m_fp);
 			fflush(m_fp);
 			m_nLogBufferLen = 0;
@@ -127,8 +124,7 @@ Logger::~Logger()
 say, the log informations is saved in this file.
 \param strFileName is the log file name
 \return bool indicating whether the file is opened or not. */
-bool Logger::AssociateFile(char* strFileName)
-{
+bool Logger::AssociateFile(char *strFileName) {
 /*	if (strFileName != NULL)
 	{
 		strcpy(m_strLogFileName, strFileName);
@@ -138,8 +134,9 @@ bool Logger::AssociateFile(char* strFileName)
 			return true;
 		}
 	}
-*/	return false;
+*/    return false;
 }
+
 /*!This method can be used to log information. Only when the specified
 level of the message is part of the Set of logged values the
 information is logged. This method receives a character string that may
@@ -149,45 +146,40 @@ at the location of the specifiers.
 \param iLevel level corresponding to this message
 \param str character string with (possible) format specifiers
 \return bool indicating whether the message was logged or not. */
-bool Logger::LogAction(int iLevel, char* str)
-{
-
+bool Logger::LogAction(int iLevel, char *str) {
+	
 	if (iLevel < 0 || iLevel >= MAX_LOG_LEVEL) iLevel = 0;
 	if (!IsInLogLevel(iLevel)) return false;
-
-	if (m_fp != NULL)
-	{
+	
+	if (m_fp != NULL) {
 		int nLenHeader, nLenLog;
 		char strHeader[100];
-
+		
 		if (strcmp(m_strHeader[iLevel], ""))
-		nLenHeader = sprintf(strHeader,"[%s]", m_strHeader[iLevel]);
+			nLenHeader = sprintf(strHeader, "[%s]", m_strHeader[iLevel]);
 		else
-		nLenHeader = sprintf(strHeader,"");
-
+			nLenHeader = sprintf(strHeader, "");
+		
 		nLenLog = strlen(str);
-
+		
 		// if log buffer is full, then write to file
 		if (m_nLogBufferLen + nLenHeader + nLenLog + 1 > 1/*5 * MAX_LOG_LINE - 100*/
-		&& m_nLogBufferLen > 0)
-		{
+		    && m_nLogBufferLen > 0) {
 			fwrite(m_strBuf, m_nLogBufferLen, 1, m_fp);
 			fflush(m_fp);
 			m_nLogBufferLen = 0;
 		}
-
+		
 		// copy the log string to log buffer
-		memcpy(m_strBuf+m_nLogBufferLen, strHeader, nLenHeader);
+		memcpy(m_strBuf + m_nLogBufferLen, strHeader, nLenHeader);
 		m_nLogBufferLen += nLenHeader;
-		memcpy(m_strBuf+m_nLogBufferLen, str, nLenLog);
+		memcpy(m_strBuf + m_nLogBufferLen, str, nLenLog);
 		m_nLogBufferLen += nLenLog;
-		*(m_strBuf+m_nLogBufferLen) = '\n';	// 10 is the end Mark
+		*(m_strBuf + m_nLogBufferLen) = '\n';    // 10 is the end Mark
 		m_nLogBufferLen += 1;
-
+		
 		return true;
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
@@ -202,50 +194,42 @@ bool Logger::LogAction(int iLevel, char* str)
    \param str character string with (possible) format specifiers
    \param ... variables that define the values of the specifiers.
    \return bool indicating whether the message was logged or not. */
-bool Logger::Log( int iLevel, char *str, ... )
-{
-  if( IsInLogLevel( iLevel ) )
-  {
-	char strLogString[2*MAX_LOG_LINE];
-    va_list ap;
+bool Logger::Log(int iLevel, char *str, ...) {
+	if (IsInLogLevel(iLevel)) {
+		char strLogString[2 * MAX_LOG_LINE];
+		va_list ap;
 #ifdef Solaris
-    va_start( ap );
+		va_start( ap );
 #else
-    va_start( ap, str );
+		va_start(ap, str);
 #endif
-    vsprintf( strLogString, str, ap );
-    va_end(ap);
-
-    return LogAction(iLevel, strLogString);
-  }
-  return false;
+		vsprintf(strLogString, str, ap);
+		va_end(ap);
+		
+		return LogAction(iLevel, strLogString);
+	}
+	return false;
 }
-
 
 
 /*!This method returns whether the supplied log level is recorded, thus whether
    it is part of the Set of logged levels.
    \param iLevel log level that should be checked
    \return bool indicating whether the supplied log level is logged. */
-bool Logger::IsInLogLevel( int iLevel )
-{
-		if (iLevel < 0 || iLevel >= MAX_LOG_LEVEL) iLevel = 0;
-  return m_bLogLevels[iLevel];
+bool Logger::IsInLogLevel(int iLevel) {
+	if (iLevel < 0 || iLevel >= MAX_LOG_LEVEL) iLevel = 0;
+	return m_bLogLevels[iLevel];
 }
 
 /*! This method inserts the log level 'iLevel' to the Set of logged levels. 
     Information from this log level will be printed. 
     \param iLevel level that will be added to the Set
     \return bool indicating whether the Update was successfull. */
-bool  Logger::SetLogLevel( int iLevel, bool bSet )
-{
-	if (iLevel >= 0 && iLevel < MAX_LOG_LEVEL)
-	{
+bool Logger::SetLogLevel(int iLevel, bool bSet) {
+	if (iLevel >= 0 && iLevel < MAX_LOG_LEVEL) {
 		m_bLogLevels[iLevel] = bSet;
 		return true;
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
@@ -255,25 +239,20 @@ bool  Logger::SetLogLevel( int iLevel, bool bSet )
     \param iMin minimum log level that is added
     \param iMax maximum log level that is added 
     \return bool indicating whether the Update was successfull. */
-bool  Logger::SetLogRange( int iMin, int iMax, bool bSet )
-{
-	  bool bReturn = true;
-	  for( int i = iMin ; i < iMax;  i++ )
-		bReturn &= SetLogLevel( i, bSet );
-	  return bReturn;
+bool Logger::SetLogRange(int iMin, int iMax, bool bSet) {
+	bool bReturn = true;
+	for (int i = iMin; i < iMax; i++)
+		bReturn &= SetLogLevel(i, bSet);
+	return bReturn;
 }
 
 /*! This method returns the current header that is written before the actual
     text that has to be logged.
     \return current header */
-char* Logger::GetHeader( int iLevel )
-{
-	if (iLevel >= 0 && iLevel < MAX_LOG_LEVEL)
-	{
+char *Logger::GetHeader(int iLevel) {
+	if (iLevel >= 0 && iLevel < MAX_LOG_LEVEL) {
 		return m_strHeader[iLevel];
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
@@ -282,17 +261,13 @@ char* Logger::GetHeader( int iLevel )
 		\param iLevel that represents the log level you want to Set header
     \param str that represents the character string
     \return bool indicating whether the Update was succesfull */
-bool Logger::SetHeader(int iLevel, char *str, bool bSet)
-{
-	if (iLevel >= 0 && iLevel < MAX_LOG_LEVEL)
-	{			
-	
-		strcpy( &m_strHeader[iLevel][0], str );
+bool Logger::SetHeader(int iLevel, char *str, bool bSet) {
+	if (iLevel >= 0 && iLevel < MAX_LOG_LEVEL) {
+		
+		strcpy(&m_strHeader[iLevel][0], str);
 		SetLogLevel(iLevel, bSet);
 		return true;
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
@@ -302,13 +277,11 @@ bool Logger::SetHeader(int iLevel, char *str, bool bSet)
    written. This outputstream can be standard output (cout) or a reference to a
    file.
    \return o outputstream to which log information is printed. */
-FILE* Logger::GetLogFile(  )
-{
-  return m_fp;
+FILE *Logger::GetLogFile() {
+	return m_fp;
 }
 
-void Logger::SetLevelAndHeader()
-{
+void Logger::SetLevelAndHeader() {
 	// set the log headers defined before.
 //	SetHeader(0, "Error : ");
 //	SetHeader(1, "Connection : ");
@@ -322,54 +295,50 @@ void Logger::SetLevelAndHeader()
 //	SetHeader(20, "Skills : ");
 	SetHeader(25, "Strategy : ");
 //	SetHeader(31, "Debug : ");
-
+	
 	//	SetLogLevel(30);		// this is for dos show
-
+	
 }
 
 
-void Logger::Show(char *str, ...)
-{
-	char strLogString[2*MAX_LOG_LINE];
+void Logger::Show(char *str, ...) {
+	char strLogString[2 * MAX_LOG_LINE];
 	va_list ap;
-	va_start( ap, str );
-	vsprintf( strLogString, str, ap );
+	va_start(ap, str);
+	vsprintf(strLogString, str, ap);
 	va_end(ap);
-		
+	
 	MessageBox(NULL, strLogString, "Log", MB_OK);
 }
 
 
-void Logger::SendMsg(int timer, int nTab, char *msg)
-{
+void Logger::SendMsg(int timer, int nTab, char *msg) {
 	dispinfo_t dispinfo;
 	dispinfo.mode = MSG_MODE;
 	dispinfo.body.msg.time = timer;
 	dispinfo.body.msg.nTab = nTab;
 	
-	sprintf( dispinfo.body.msg.message, msg);
-	
+	sprintf(dispinfo.body.msg.message, msg);
+
 #ifndef OFFCLIENT
 	SendMessageOfGame(&dispinfo);
 #else
 	m_pDoc->m_pLogPlayer->AddLogInfo(&dispinfo.body.msg);
-#endif	
+#endif
 }
 
-BOOL Logger::GetDebugWindowHandle()
-{
+BOOL Logger::GetDebugWindowHandle() {
 	//find the Debug window
 	hWnd = ::FindWindow("SimuroSot Log Player", NULL);
-	if(!hWnd)
+	if (!hWnd)
 		return FALSE;
 	else
 		return TRUE;
 }
 
-BOOL Logger::SendMessageOfGame(dispinfo_t *pInfo)
-{
-	if(GetDebugWindowHandle() == FALSE) return FALSE;
-
+BOOL Logger::SendMessageOfGame(dispinfo_t *pInfo) {
+	if (GetDebugWindowHandle() == FALSE) return FALSE;
+	
 	//set up a COPYDATASTRUCT structure for use with WM_COPYDATA
 	cpData.dwData = (DWORD) 999;
 	cpData.cbData = sizeof(dispinfo_t);
@@ -378,13 +347,10 @@ BOOL Logger::SendMessageOfGame(dispinfo_t *pInfo)
 	//send the structure to Debug via the system
 	LRESULT lResult = ::SendMessage(hWnd, WM_COPYDATA, (UINT) NULL, (long) &cpData);
 //	LRESULT lResult = ::PostMessage(hWnd, WM_COPYDATA, (UINT) NULL, (long) &cpData);
-
-	if((BOOL) lResult == TRUE)
-	{
+	
+	if ((BOOL) lResult == TRUE) {
 		return TRUE;
-	}
-	else
-	{
+	} else {
 		return FALSE;
 	}
 }

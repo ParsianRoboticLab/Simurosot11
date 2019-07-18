@@ -10,50 +10,44 @@
 #define ANTICLOCK -1
 #define NOCLOCK  0
 
-typedef struct
-{
+typedef struct {
 	double x;
 	double y;
-}dbPOINT,BallInformation,ballInformation;
+} dbPOINT, BallInformation, ballInformation;
 
-//³¡µØÎïÌå¸¡µãÎ»×ËÐÅÏ¢
-typedef struct
-{
-	double x;	//ÎïÌåÖÐÐÄµÄ×ø±êx
-	double y;  //ÎïÌåÖÐÐÄµÄ×ø±êy,¸Ã×ø±êÊÇÒÔÏÔÊ¾×ø±êÎª»ù×¼µÄ
-	double theta;//»¡¶È·½Ïò½Ç
-	double speedv;	// »úÆ÷ÈËÏßËÙ¶È£¨ÉÏÖÜÆÚ£©
-	double speedw;	// »úÆ÷ÈË½ÇËÙ¶È
-}dbROBOTPOSTURE, RobotInford;
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å¸¡ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ï¢
+typedef struct {
+	double x;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½x
+	double y;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½y,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½×¼ï¿½ï¿½
+	double theta;//ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½
+	double speedv;    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½
+	double speedw;    // ï¿½ï¿½ï¿½ï¿½ï¿½Ë½ï¿½ï¿½Ù¶ï¿½
+} dbROBOTPOSTURE, RobotInford;
 
-//Ð¡³µÂÖËÙÖµ¸¡µãÐÍ
-typedef struct
-{
+//Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+typedef struct {
 	double LeftValue;
 	double RightValue;
-}dbLRWheelVelocity;
+} dbLRWheelVelocity;
 
-typedef struct
-{
+typedef struct {
 	double a;
 	double b;
 	double c;
-}Formulation, LINEFORMULATION;
+} Formulation, LINEFORMULATION;
 
-typedef struct
-{
+typedef struct {
 	Formulation Formu;
 	double angle;
 	double velocity;
 	dbPOINT proBall;
 } FORCASTBALL;
 
-struct DEGame
-{
-	int	DEGameGround;
-	int	DEStartState;
-	int	DEStartMode;
+struct DEGame {
+	int DEGameGround;
+	int DEStartState;
+	int DEStartMode;
 	int DEPenaltyDirection;
 };
 
-#endif	// _GLOBE_H_
+#endif    // _GLOBE_H_
