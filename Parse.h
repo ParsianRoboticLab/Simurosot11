@@ -57,18 +57,20 @@ of Peter Stone. Tests Shows that scanning integers has a performance
 increase of 30.3% over the method used by CMUnited and 68.0% over sscanf.
 For parsing doubles the performance increase was 15.4% compared to CMUnited
 and 85.1% compared to sscanf. */
-class Parse
-{
-	public:
-
+class Parse {
+public:
+	
 	// methods which return a specific type of value from a string message
-	static double ParseFirstDouble              ( char** strMsg                 );
-	static int    ParseFirstInt                 ( char** strMsg                 );
-
+	static double ParseFirstDouble(char **strMsg);
+	
+	static int ParseFirstInt(char **strMsg);
+	
 	// methods which move to a specific position in a string message
-	static char   GotoFirstSpaceOrClosingBracket( char** strMsg                 );
-	static int    GotoFirstOccurenceOf          ( char   c      , char** strMsg );
-	static char   GotoFirstNonSpace             ( char** strMsg                 );
+	static char GotoFirstSpaceOrClosingBracket(char **strMsg);
+	
+	static int GotoFirstOccurenceOf(char c, char **strMsg);
+	
+	static char GotoFirstNonSpace(char **strMsg);
 };
 
 #endif
